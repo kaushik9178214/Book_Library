@@ -1,8 +1,12 @@
 <template>
   <div>
-    <MDBInput v-model="searchedAuthor" type="text" label="Author"></MDBInput>
+    <!-- <DropDownComponent
+      v-bind:authors="authorList"
+      v-model="searchedAuthor"
+    ></DropDownComponent> -->
+    <MDBInput autocapitalize="words"  v-model="searchedAuthor" type="text" label="Author"></MDBInput>
     <div class="text-center">
-      <MDBBtn color="primary" class="mt-2" v-on:click="searchClicked"
+      <MDBBtn color="primary"  v-on:click="searchClicked"
         >Search</MDBBtn
       >
     </div>
@@ -11,14 +15,27 @@
 
 <script setup lang="ts">
 import { MDBBtn, MDBInput } from "mdb-vue-ui-kit";
-
-const searchedAuthor = defineModel<string>();
+// import DropDownComponent from "./DropDownComponent.vue";
+import type { Author } from "../types";
+import {  watch } from "vue";
+defineProps<{
+  authorList: Author[];
+}>();
+const searchedAuthor = defineModel<string>()
 const emits = defineEmits<{
-  (e: "searchBooksOfAuthor"): void;
+  (e: "searchByClick"): void;
+  (e:"searchByInput"):void
 }>();
 const searchClicked = (): void => {
-  emits("searchBooksOfAuthor");
+  emits("searchByClick");
+  
 };
+watch(searchedAuthor,()=>{
+  console.log(searchedAuthor.value)
+  emits("searchByInput")
+  console.log(searchedAuthor.value)
+  
+})
 </script>
 
 <style scoped></style>

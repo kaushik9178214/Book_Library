@@ -7,12 +7,15 @@ export type Book = {
   id: number;
   author: Author;
   name: string;
-
   description: string;
-
   favourite: boolean;
 };
 export type User = {
   name: string;
   books: Book[];
 };
+export type BookError={
+  name:string,
+  author:string,
+  description:string
+}

@@ -14,7 +14,8 @@
         <div class="d-flex justify-content-between">
           <div>{{ book.author.name }}</div>
 
-          <MDBBtn v-on:click="deleteButtonClicked(book.id)">Delete</MDBBtn>
+         
+          <MDBIcon class="text-danger" v-on:click="deleteButtonClicked(book.id)"icon="trash" iconStyle="fas"></MDBIcon>
         </div>
       </MDBCardBody>
     </MDBCard>
@@ -22,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { MDBBtn, MDBCard, MDBCardBody, MDBIcon } from "mdb-vue-ui-kit";
+import {  MDBCard, MDBCardBody, MDBIcon } from "mdb-vue-ui-kit";
 import type { Book } from "../types";
 
 defineProps<{
