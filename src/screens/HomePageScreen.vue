@@ -14,7 +14,7 @@
         v-on:activeTab="assignUser"
         v-on:requestToAddBook="modalToggle = !modalToggle"
         v-on:showListOfBooks="
-          bookStore.getListOfBooks(bookStore.currentUser.name)
+          bookStore.getListOfBooks
         "
         v-bind:listOfUserBooks="bookStore.listOfBooks"
         v-on:toggleFavourite="changeFavourite"
@@ -31,7 +31,7 @@
         v-bind:authorList="bookStore.listOfAuthors"
         v-bind:errors="bookStore.errors"
         v-on:addThisBook="addBook"
-        v-on:cancel="cancelAddBook"
+        v-on:modalHidden="cancelAddBook"
       />
     </div>
   </div>
@@ -63,19 +63,20 @@ const changeFavourite = (book: Book): void => {
 const assignUser = (name: string): void => {
   console.log(name);
   bookStore.currentUser = bookStore.users.find((value) => value.name == name)!;
-  bookStore.getListOfBooks(name);
+  // bookStore.getListOfBooks(name);
   console.log(bookStore.users.find((value) => value.name == name)!);
+  bookStore.initializeBook()
   console.log(bookStore.currentUser);
 };
 const makeNewUser = (): void => {
   if (!userName.value.trim()) {
     return;
   }
-  if(bookStore.users.find((user)=>user.name==userName.value)){
+  if(bookStore.users.find((user)=>user.name==userName.value.toLowerCase())){
     bookStore.userError="User already exists"
     return;
   }
-  bookStore.addUser(userName.value);
+  bookStore.addUser(userName.value.toLowerCase());
   console.log(bookStore.users);
   userName.value = "";
 };
@@ -83,8 +84,9 @@ const addBook = (): void => {
   if(!bookStore.validateBook()){
     return
   }
-  bookStore.addBook(bookStore.currentUser.name);
-  modalToggle.value = !modalToggle.value;
+  bookStore.addBook();
+  modalToggle.value = false;
+  bookStore.initializeBook()
  
   
 
@@ -96,8 +98,9 @@ const deleteBook = (id: number) => {
   bookStore.deleteBook(bookStore.currentUser.name, id);
 };
 const cancelAddBook=():void=>{
-  modalToggle.value=!modalToggle.value
+  modalToggle.value=false
   bookStore.initializeBook()
+  bookStore.initializeErrors()
 }
 onBeforeMount(() => {
   bookStore.getAuthorList();

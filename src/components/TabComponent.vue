@@ -83,7 +83,7 @@ const favouriteBooks = computed(() => {
     );
   }
   console.log(props.listOfUserBooks.filter((book) =>
-      book.author.name.toLocaleLowerCase().includes(searchedAuthor.value.toLowerCase())))
+      book.author.name.toLowerCase().includes(searchedAuthor.value.toLowerCase())))
   return [];
 });
 const showAllBooks = (): void => {

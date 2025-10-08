@@ -1,7 +1,7 @@
 <template>
   <div>
-    <MDBModal v-model="toggle"
-      ><MDBModalHeader class="text-bg-primary">
+    <MDBModal v-on:hide="modalHidden" v-model="toggle"
+      ><MDBModalHeader :close="false" class="text-bg-primary">
         <MDBModalTitle> Add a book </MDBModalTitle>
       </MDBModalHeader>
       <MDBModalBody class="d-grid gap-2">
@@ -47,13 +47,17 @@ defineProps<{
 }>();
 const emits = defineEmits<{
   (e: "addThisBook"): void;
-  (e:"cancel"):void
+  
+  (e: "modalHidden"): void;
 }>();
 const addBook = (): void => {
   emits("addThisBook");
 };
 const cancelClicked=():void=>{
-  emits("cancel")
+  emits("modalHidden");
+}
+const modalHidden=():void=>{
+  emits("modalHidden");
 }
 </script>
 

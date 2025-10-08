@@ -30,13 +30,16 @@ export const useBookStore = defineStore("books", () => {
     },
     favourite: false,
   });
+  const initializeErrors=():void=>{
+    errors.value={name:"",author:"",description:""}
+  }
   const users = ref<User[]>([]);
   const listOfAuthors = ref<Author[]>([]);
   const listOfBooks = ref<Book[]>([]);
   const addUser = async (belongsTo: string) => {
-    if(users.value.find((user)=>user.name==belongsTo)){
-      userError.value="User already exists"
-    }
+    // if(users.value.find((user)=>user.name==belongsTo)){
+    //   userError.value="User already exists"
+    // }
     const response = await axios.get(
       `http://localhost:8080/api/library/${belongsTo}/books`
     );
@@ -71,8 +74,8 @@ const validateBook=():boolean=>{
     listOfAuthors.value = response.data;
     console.log(listOfAuthors.value);
   };
-  const addBook = async (belongsTo: string) => {
-    
+  const addBook = async () => {
+    const belongsTo:string=currentUser.value.name
       try {
         const response = await axios.post(
           `http://localhost:8080/api/library/${belongsTo}/books`,
@@ -87,25 +90,16 @@ const validateBook=():boolean=>{
         users.value
           .find((name) => name.name == belongsTo)
           ?.books.push(currentBook.value);
-        currentBook.value = {
-          name: "",
-          id: 0,
-          description: "",
-          author: {
-            id: 0,
-            name: "",
-            rating: 0,
-          },
-          favourite: false,
-        };
-        getListOfBooks(belongsTo);
+        
+        getListOfBooks();
         errors.value = { name: "", author: "", description: "" };
       } catch (e: any) {
         console.log("api call failed", e);
       }
   };
 
-  const getListOfBooks = async (belongsTo: string) => {
+  const getListOfBooks = async () => {
+    const belongsTo:string=currentUser.value.name
     const response = await axios.get(
       `http://localhost:8080/api/library/${belongsTo}/books`
     );
@@ -198,6 +192,7 @@ const validateBook=():boolean=>{
     getListOfFavouriteBooks,
     getBooksByAuthor,
     validateBook,
-    userError
+    userError,
+    initializeErrors
   };
 });
