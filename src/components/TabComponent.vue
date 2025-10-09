@@ -6,6 +6,7 @@
           v-on:click="sendCurrentTab(user.name)"
           v-for="user in users"
           :tabId="user.name"
+          class="flex-fill text-center"
           >{{ user.name }}</MDBTabItem
         >
       </MDBTabNav>
@@ -17,21 +18,23 @@
       </div>
       <MDBTabs v-model="activeTabSection">
         <MDBTabNav>
-          <MDBTabItem v-on:click="showAllBooks" tabId="1">All </MDBTabItem>
-          <MDBTabItem v-on:click="showAuthorBooks" tabId="2"
+          <MDBTabItem class="flex-fill text-center" v-on:click="showAllBooks" tabId="1">All </MDBTabItem>
+          <MDBTabItem class="flex-fill text-center" v-on:click="showAuthorBooks" tabId="2"
             >Author
           </MDBTabItem>
-          <MDBTabItem v-on:click="showFavouriteBooks" tabId="3"
+          <MDBTabItem class="flex-fill text-center" v-on:click="showFavouriteBooks" tabId="3"
             >Favourite
           </MDBTabItem>
         </MDBTabNav>
       </MDBTabs>
+      <hr></hr>
       <SearchComponent
         v-if="activeTabSection == '2'"
         v-on:searchBooksByInput=""
         v-on:searchByClick="searchClicked"
         v-bind:authorList="authorList"
         v-model="searchedAuthor"
+        class="d-grid gap-2"
       />
 
       <BookComponent
@@ -66,7 +69,7 @@ const emits = defineEmits<{
   (e: "activeTab", value: string): void;
   (e: "requestToAddBook"): void;
   (e: "requestToDeleteBook", value: number): void;
-  (e: "toggleFavourite", value: Book): void;
+  (e: "toggleFavourite", value1: number,value2:boolean): void;
   (e: "searchBooksByAuthor", value: string): void;
   (e: "showListOfBooks"): void;
   (e: "showListOfFavouriteBooks"): void;
@@ -76,14 +79,20 @@ const favouriteBooks = computed(() => {
   if (activeTabSection.value == "3") {
     return props.listOfUserBooks.filter((book) => book.favourite == true);
   }
-  if (activeTabSection.value == "2"&& searchedAuthor.value.trim()!="") {
+  if (activeTabSection.value == "2" && searchedAuthor.value.trim() != "") {
     return props.listOfUserBooks.filter((book) =>
-      book.author.name.toLocaleLowerCase().includes(searchedAuthor.value.toLowerCase())
-      
+      book.author.name
+        .toLowerCase()
+        .includes(searchedAuthor.value.toLowerCase())
     );
   }
-  console.log(props.listOfUserBooks.filter((book) =>
-      book.author.name.toLowerCase().includes(searchedAuthor.value.toLowerCase())))
+  console.log(
+    props.listOfUserBooks.filter((book) =>
+      book.author.name
+        .toLowerCase()
+        .includes(searchedAuthor.value.toLowerCase())
+    )
+  );
   return [];
 });
 const showAllBooks = (): void => {
@@ -94,6 +103,7 @@ const showAuthorBooks = (): void => {
 };
 const showFavouriteBooks = (): void => {
   emits("showListOfFavouriteBooks");
+  searchedAuthor.value = "";
 };
 const addButtonClicked = (): void => {
   emits("requestToAddBook");
@@ -101,8 +111,8 @@ const addButtonClicked = (): void => {
 const sendDeleteIndex = (id: number): void => {
   emits("requestToDeleteBook", id);
 };
-const sendFavouriteIndex = (book: Book): void => {
-  emits("toggleFavourite", book);
+const sendFavouriteIndex = (id:number,favourite:boolean): void => {
+  emits("toggleFavourite", id,favourite);
 };
 const searchClicked = (): void => {
   emits("searchBooksByAuthor", searchedAuthor.value);
@@ -111,7 +121,7 @@ const searchClicked = (): void => {
 const sendCurrentTab = (name: string) => {
   activeTabSection.value = "1";
   emits("activeTab", name);
-  emits("showListOfBooks");
+  
 };
 </script>
 

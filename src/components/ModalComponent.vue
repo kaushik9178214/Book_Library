@@ -10,7 +10,7 @@
         <div class="text-danger">{{ errors.name }}</div>
         <DropDownComponent
           v-bind:authors="authorList"
-          v-model="currentBook!.author"
+          v-model="currentBook!.authorId"
         ></DropDownComponent>
         <div class="text-danger">{{errors.author}}</div>
         <MDBInput
@@ -38,16 +38,15 @@ import {
   MDBModalTitle,
 } from "mdb-vue-ui-kit";
 import DropDownComponent from "./DropDownComponent.vue";
-import type { Author, Book, BookError } from "../types";
+import type { Author,  BookFormError, BookForm } from "../types";
 const toggle = defineModel<boolean>();
-const currentBook = defineModel<Book>("bookInUse");
+const currentBook = defineModel<BookForm>("bookInUse");
 defineProps<{
   authorList: Author[];
-  errors:BookError
+  errors:BookFormError
 }>();
 const emits = defineEmits<{
-  (e: "addThisBook"): void;
-  
+  (e: "addThisBook"): void;  
   (e: "modalHidden"): void;
 }>();
 const addBook = (): void => {

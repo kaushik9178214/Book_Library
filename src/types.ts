@@ -14,8 +14,13 @@ export type User = {
   name: string;
   books: Book[];
 };
-export type BookError={
+export type BookFormError={
   name:string,
   author:string,
+  description:string
+}
+export type BookForm={
+  name:string,
+  authorId:number,
   description:string
 }
